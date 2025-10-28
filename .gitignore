@@ -3,6 +3,7 @@
 *.d
 .idea/
 bureau
+*.pdf
 # Object files
 *.o
 *.ko
