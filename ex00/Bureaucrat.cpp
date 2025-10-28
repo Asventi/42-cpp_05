@@ -14,26 +14,26 @@
 
 int	Bureaucrat::getGrade() const
 {
-	return (_grade);
+	return (m_grade);
 }
 
 std::string const	&Bureaucrat::getName() const
 {
-	return (_name);
+	return (m_name);
 }
 
-void	Bureaucrat::_set_grade(int grade)
+void	Bureaucrat::setGrade(int t_grade)
 {
-	if (grade > 150)
+	if (t_grade > 150)
 		throw GradeTooLowException();
-	if (grade < 1)
+	if (t_grade < 1)
 		throw GradeTooHighException();
-	_grade = grade;
+	m_grade = t_grade;
 }
 
 Bureaucrat &Bureaucrat::operator++()
 {
-	_set_grade(_grade - 1);
+	setGrade(m_grade - 1);
 	return (*this);
 }
 
@@ -46,7 +46,7 @@ Bureaucrat Bureaucrat::operator++(int)
 
 Bureaucrat &Bureaucrat::operator--()
 {
-	_set_grade(_grade + 1);
+	setGrade(m_grade + 1);
 	return (*this);
 }
 
@@ -57,33 +57,33 @@ Bureaucrat Bureaucrat::operator--(int)
 	return (old);
 }
 
-Bureaucrat::Bureaucrat(): _name("bureaucrat_default_name"), _grade(75)
+Bureaucrat::Bureaucrat(): m_name("bureaucrat_default_name"), m_grade(75)
 {
 }
 
-Bureaucrat::Bureaucrat(int grade): _name("bureaucrat_default_name")
+Bureaucrat::Bureaucrat(int t_grade): m_name("bureaucrat_default_name")
 {
-	_set_grade(grade);
+	setGrade(t_grade);
 }
 
-Bureaucrat::Bureaucrat(std::string const &name): _name(name), _grade(75)
-{
-}
-
-Bureaucrat::Bureaucrat(std::string const &name, int grade): _name(name)
-{
-	_set_grade(grade);
-}
-
-Bureaucrat::Bureaucrat(Bureaucrat const &e): _name(e._name), _grade(e._grade)
+Bureaucrat::Bureaucrat(std::string const &t_name): m_name(t_name), m_grade(75)
 {
 }
 
-Bureaucrat	&Bureaucrat::operator=(Bureaucrat const &e)
+Bureaucrat::Bureaucrat(std::string const &t_name, int t_grade): m_name(t_name)
 {
-	if (this == &e)
+	setGrade(t_grade);
+}
+
+Bureaucrat::Bureaucrat(Bureaucrat const &t_e): m_name(t_e.m_name), m_grade(t_e.m_grade)
+{
+}
+
+Bureaucrat	&Bureaucrat::operator=(Bureaucrat const &t_e)
+{
+	if (this == &t_e)
 		return (*this);
-	_grade = e._grade;
+	m_grade = t_e.m_grade;
 	return (*this);
 }
 
@@ -101,8 +101,8 @@ char const	*Bureaucrat::GradeTooLowException::what() const throw()
 	return (GRADE_LOW_STR);
 }
 
-std::ostream	&operator<<(std::ostream &os, Bureaucrat const &b)
+std::ostream	&operator<<(std::ostream &t_os, Bureaucrat const &t_b)
 {
-	os << b.getName() << ", bureaucrat grade " << b.getGrade() << ".";
-	return (os);
+	t_os << t_b.getName() << ", bureaucrat grade " << t_b.getGrade() << ".";
+	return (t_os);
 }

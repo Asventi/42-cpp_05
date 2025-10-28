@@ -23,7 +23,7 @@ TEST_CASE("Bureaucrat Exceptions On Construction")
 
 TEST_CASE("Bureaucrat increment / decrement")
 {
-	Bureaucrat	b("jean", 10);
+	Bureaucrat	b("DEVANNN", 10);
 
 	CHECK((++b).getGrade() == 9);
 	CHECK(b++.getGrade() == 9);

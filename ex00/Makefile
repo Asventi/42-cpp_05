@@ -56,7 +56,9 @@ INCLUDES	=	$(INCS_DIR) \
 # ===============CONFIGS=============== #
 
 CC			=	c++
-CFLAGS		+=	-Wall -Wextra -Werror -std=c++98 -Wshadow
+CFLAGS		+=	-Wall -Wextra -Werror -std=c++98 -Weverything -Wno-suggest-override \
+				-Wno-suggest-destructor-override -Wno-padded
+
 CPPFLAGS	+=	$(addprefix -I, $(INCLUDES)) \
 			-MMD -MP
 

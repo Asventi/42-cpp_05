@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
@@ -18,12 +19,13 @@
 TEST_CASE("Bureaucrat Exceptions On Construction")
 {
 	CHECK_THROWS_AS(Bureaucrat b(789), Bureaucrat::GradeTooLowException);
+	CHECK_THROWS_AS(Bureaucrat b(789), std::exception);
 	CHECK_THROWS_AS(Bureaucrat b(0), Bureaucrat::GradeTooHighException);
 }
 
 TEST_CASE("Bureaucrat increment / decrement")
 {
-	Bureaucrat	b("jean", 10);
+	Bureaucrat	b("DEVANNN", 10);
 
 	CHECK((++b).getGrade() == 9);
 	CHECK(b++.getGrade() == 9);
@@ -35,8 +37,8 @@ TEST_CASE("Bureaucrat increment / decrement")
 
 TEST_CASE("Bureaucrat increment / decrement exception")
 {
-	Bureaucrat	b("jean", 150);
-	Bureaucrat	b2("jean", 1);
+	Bureaucrat	b("DEVANNN", 150);
+	Bureaucrat	b2("DEVANNN", 1);
 
 	CHECK_THROWS_AS(--b, Bureaucrat::GradeTooLowException);
 	CHECK(b.getGrade() == 150);
@@ -46,9 +48,26 @@ TEST_CASE("Bureaucrat increment / decrement exception")
 
 TEST_CASE("Bureaucrat ostream overload")
 {
-	Bureaucrat b("jean", 42);
+	Bureaucrat b("DEVANNN", 42);
 	std::stringstream	s;
 
 	s << b;
-	CHECK(s.str() == "jean, bureaucrat grade 42.");
+	CHECK(s.str() == "DEVANNN, bureaucrat grade 42.");
+}
+
+TEST_CASE("Form")
+{
+	CHECK_THROWS_AS(Form f("test", 0, 150), Form::GradeTooHighException);
+	CHECK_THROWS_AS(Form f("test", 0, 150), std::exception);
+	CHECK_THROWS_AS(Form f("test", 5, -2), Form::GradeTooHighException);
+	CHECK_THROWS_AS(Form f("test", 170, 150), Form::GradeTooLowException);
+	CHECK_THROWS_AS(Form f("test", 48, 180), Form::GradeTooLowException);
+	Bureaucrat	b(20);
+	Bureaucrat	b2(50);
+	Form		f("form", 20, 10);
+
+	CHECK_THROWS_AS(f.beSigned(b2), Form::GradeTooLowException);
+	f.beSigned(b);
+	CHECK(f.getSigned());
+	CHECK_NOTHROW(f.beSigned(b2));
 }
