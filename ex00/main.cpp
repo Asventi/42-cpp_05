@@ -50,5 +50,5 @@ TEST_CASE("Bureaucrat ostream overload")
 	std::stringstream	s;
 
 	s << b;
-	CHECK(s.str() == "jean, bureaucrat grade 42.");
+	CHECK(s.str() == "jean, bureaucrat grade 42");
 }

@@ -14,6 +14,7 @@
 #include "AForm.hpp"
 #include "ShrubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
+#include "Intern.hpp"
 #include <fstream>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
@@ -121,3 +122,22 @@ TEST_CASE("Presidential Form")
 	delete form;
 }
 
+TEST_CASE("Intern")
+{
+	Intern	i;
+	AForm	*form;
+
+	CHECK(!i.makeForm("dqwdqwd", "test"));
+	form = i.makeForm("shrubbery creation", "test_target");
+	REQUIRE(form);
+	CHECK(form->name() == "test_target");
+	delete form;
+	form = i.makeForm("presidential pardon", "test_target");
+	REQUIRE(form);
+	CHECK(form->name() == "test_target");
+	delete form;
+	form = i.makeForm("robotomy request", "test_target");
+	REQUIRE(form);
+	CHECK(form->name() == "test_target");
+	delete form;
+}

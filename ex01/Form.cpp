@@ -59,7 +59,7 @@ std::ostream	&operator<<(std::ostream &t_os, Form const &t_form)
 	if (!t_form.getSigned())
 		t_os << "not ";
 	t_os << "signed, signGrade: " << t_form.signGrade() << ", execGrade: "
-		<< t_form.execGrade() << ".";
+		<< t_form.execGrade();
 	return (t_os);
 }
 
