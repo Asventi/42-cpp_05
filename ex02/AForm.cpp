@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Form.cpp                                           :+:      :+:    :+:   */
+/*   AForm.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pjarnac <pjarnac@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,11 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Form.hpp"
+#include "AForm.hpp"
 
 #include "Bureaucrat.hpp"
 
-void	Form::beSigned(Bureaucrat const &t_bcrat)
+void	AForm::execute(Bureaucrat const &t_bcrat) const
+{
+	if (not m_signed)
+		throw NotSignedException();
+	if (t_bcrat.getGrade() > m_execGrade)
+		throw GradeTooLowException();
+	executeInternalForm();
+}
+
+void	AForm::beSigned(Bureaucrat const &t_bcrat)
 {
 	if (m_signed)
 		return ;
@@ -23,22 +32,22 @@ void	Form::beSigned(Bureaucrat const &t_bcrat)
 	m_signed = true;
 }
 
-std::string const &Form::name() const
+std::string const &AForm::name() const
 {
 	return (m_name);
 }
 
-bool Form::getSigned() const
+bool AForm::getSigned() const
 {
 	return (m_signed);
 }
 
-int	Form::signGrade() const
+int	AForm::signGrade() const
 {
 	return (m_signGrade);
 }
 
-int Form::setGrade(int t_grade)
+int AForm::setGrade(int t_grade)
 {
 	if (t_grade > 150)
 		throw GradeTooLowException();
@@ -48,12 +57,12 @@ int Form::setGrade(int t_grade)
 }
 
 
-int	Form::execGrade() const
+int	AForm::execGrade() const
 {
 	return (m_execGrade);
 }
 
-std::ostream	&operator<<(std::ostream &t_os, Form const &t_form)
+std::ostream	&operator<<(std::ostream &t_os, AForm const &t_form)
 {
 	t_os << t_form.name() << " ";
 	if (!t_form.getSigned())
@@ -63,30 +72,30 @@ std::ostream	&operator<<(std::ostream &t_os, Form const &t_form)
 	return (t_os);
 }
 
-Form::Form(): m_name("default_name"), m_signed(false), m_signGrade(100), m_execGrade(42)
+AForm::AForm(): m_name("default_name"), m_signed(false), m_signGrade(100), m_execGrade(42)
 {
 }
 
-Form::Form(std::string const &t_name): m_name(t_name), m_signed(false), m_signGrade(100), m_execGrade(42)
+AForm::AForm(std::string const &t_name): m_name(t_name), m_signed(false), m_signGrade(100), m_execGrade(42)
 {
 }
 
-Form::Form(int t_signGrade, int t_execGrade): m_name("default_name"), m_signed(false),
+AForm::AForm(int t_signGrade, int t_execGrade): m_name("default_name"), m_signed(false),
 	m_signGrade(setGrade(t_signGrade)), m_execGrade(setGrade(t_execGrade))
 {
 }
 
-Form::Form(std::string const &t_name, int t_signGrade, int t_execGrade): m_name(t_name), m_signed(false),
+AForm::AForm(std::string const &t_name, int t_signGrade, int t_execGrade): m_name(t_name), m_signed(false),
 	m_signGrade(setGrade(t_signGrade)), m_execGrade(setGrade(t_execGrade))
 {
 }
 
-Form::Form(Form const &t_e): m_name(t_e.m_name), m_signed(t_e.m_signed),
+AForm::AForm(AForm const &t_e): m_name(t_e.m_name), m_signed(t_e.m_signed),
 	m_signGrade(t_e.m_signGrade), m_execGrade(t_e.m_execGrade)
 {
 }
 
-Form	&Form::operator=(Form const &t_e)
+AForm	&AForm::operator=(AForm const &t_e)
 {
 	if (this == &t_e)
 		return (*this);
@@ -94,16 +103,21 @@ Form	&Form::operator=(Form const &t_e)
 	return (*this);
 }
 
-Form::~Form()
+AForm::~AForm()
 {
 }
 
-char const	*Form::GradeTooHighException::what() const throw()
+char const	*AForm::GradeTooHighException::what() const throw()
 {
 	return (GRADE_HIGH_FORM);
 }
 
-char const	*Form::GradeTooLowException::what() const throw()
+char const	*AForm::GradeTooLowException::what() const throw()
 {
 	return (GRADE_LOW_FORM);
+}
+
+char const *AForm::NotSignedException::what() const throw()
+{
+	return (NOT_SIGNED);
 }

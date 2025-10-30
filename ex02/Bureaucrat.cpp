@@ -12,19 +12,34 @@
 
 #include "Bureaucrat.hpp"
 
-#include "Form.hpp"
+#include "AForm.hpp"
 
-void	Bureaucrat::signForm(Form &t_form) const
+void Bureaucrat::executeForm(AForm const &t_form)
+{
+	try
+	{
+		t_form.execute(*this);
+		std::cout << *this << " executed " << t_form;
+	}
+	catch (std::exception &e)
+	{
+		std::cout << *this << " couldn't execute " << t_form << " because "
+			<< e.what() << ".\n";
+	}
+
+}
+
+void	Bureaucrat::signForm(AForm &t_form) const
 {
 	try
 	{
 		t_form.beSigned(*this);
 		std::cout << *this << " signed " << t_form << ".\n";
 	}
-	catch (Form::GradeTooLowException &e)
+	catch (AForm::GradeTooLowException &e)
 	{
 		std::cout << *this << " couldn't sign " << t_form << " because "
-			<< e.what() << "\n";
+			<< e.what() << ".\n";
 	}
 }
 

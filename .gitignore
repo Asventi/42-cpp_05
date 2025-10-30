@@ -3,6 +3,7 @@
 *.d
 .idea/
 bureau
+*_shrubbery
 *.pdf
 # Object files
 *.o

@@ -11,10 +11,14 @@
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "AForm.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include <fstream>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
+#include "PresidentialPardonForm.hpp"
 
 TEST_CASE("Bureaucrat Exceptions On Construction")
 {
@@ -55,33 +59,65 @@ TEST_CASE("Bureaucrat ostream overload")
 	CHECK(s.str() == "DEVANNN, bureaucrat grade 42.");
 }
 
-TEST_CASE("Form")
+TEST_CASE("Shrubbery Form")
 {
-	CHECK_THROWS_AS(Form f("test", 0, 150), Form::GradeTooHighException);
-	CHECK_THROWS_AS(Form f("test", 0, 150), std::exception);
-	CHECK_THROWS_AS(Form f("test", 5, -2), Form::GradeTooHighException);
-	CHECK_THROWS_AS(Form f("test", 170, 150), Form::GradeTooLowException);
-	CHECK_THROWS_AS(Form f("test", 48, 180), Form::GradeTooLowException);
-	CHECK_THROWS_AS(Form f(48, 180), Form::GradeTooLowException);
+	AForm	*form = new ShrubberyCreationForm();
+	Bureaucrat				b(136);
+	Bureaucrat				b2(145);
 
-	Bureaucrat	b(20);
-	Bureaucrat	b2(50);
-	Form		f("form", 20, 10);
-
-	CHECK_THROWS_AS(f.beSigned(b2), Form::GradeTooLowException);
-	f.beSigned(b);
-	CHECK(f.getSigned());
-	CHECK_NOTHROW(f.beSigned(b2));
+	CHECK(form->signGrade() == 145);
+	CHECK(form->execGrade() == 137);
+	CHECK_THROWS_AS(form->execute(b), AForm::NotSignedException);
+	b2.signForm(*form);
+	CHECK(form->getSigned());
+	b.signForm(*form);
+	CHECK(form->getSigned());
+	CHECK_THROWS_AS(form->execute(b2), AForm::GradeTooLowException);
+	form->execute(b);
+	std::ifstream	file((form->name() + "_shrubbery").c_str());
+	CHECK(file.is_open());
+	std::stringstream strs;
+	strs << file.rdbuf();
+	CHECK(strs.str() == TREE);
+	remove((form->name() + "_shrubbery").c_str());
+	delete form;
 }
 
-TEST_CASE("Bureaucrat Signing Form")
+TEST_CASE("Robotomy Form")
 {
-	Bureaucrat	b(20);
-	Bureaucrat	b2(21);
-	Form		f(20, 10);
+	AForm	*form = new RobotomyRequestForm();
+	Bureaucrat				b(1);
+	Bureaucrat				b2(71);
 
-	CHECK_NOTHROW(b2.signForm(f));
-	CHECK(!f.getSigned());
-	b.signForm(f);
-	CHECK(f.getSigned());
+	CHECK(form->signGrade() == 72);
+	CHECK(form->execGrade() ==	45);
+	CHECK_THROWS_AS(form->execute(b), AForm::NotSignedException);
+	b2.signForm(*form);
+	CHECK(form->getSigned());
+	b.signForm(*form);
+	CHECK(form->getSigned());
+	CHECK_THROWS_AS(form->execute(b2), AForm::GradeTooLowException);
+	form->execute(b);
+	delete form;
 }
+
+TEST_CASE("Presidential Form")
+{
+	AForm	*form = new PresidentialPardonForm();
+	Bureaucrat				b(1);
+	Bureaucrat				b2(25);
+
+	CHECK(form->signGrade() == 25);
+	CHECK(form->execGrade() ==	5);
+	CHECK_THROWS_AS(form->execute(b), AForm::NotSignedException);
+	b2.signForm(*form);
+	CHECK(form->getSigned());
+	b.signForm(*form);
+	CHECK(form->getSigned());
+	CHECK_THROWS_AS(form->execute(b2), AForm::GradeTooLowException);
+
+	b2.executeForm(*form);
+	b.executeForm(*form);
+	delete form;
+}
+

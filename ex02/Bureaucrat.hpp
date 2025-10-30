@@ -19,7 +19,7 @@
 # include <iostream>
 # include <string>
 
-class Form;
+class AForm;
 
 class Bureaucrat
 {
@@ -29,7 +29,8 @@ private:
 
 	void				setGrade(int t_grade);
 public:
-	void	signForm(Form &t_form) const;
+	void	executeForm(AForm const &t_form);
+	void	signForm(AForm &t_form) const;
 
 	std::string const	&getName() const;
 	int					getGrade() const;
